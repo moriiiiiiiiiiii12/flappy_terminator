@@ -30,16 +30,16 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             actionOnGet: (prefab) =>
             {
                 CountActiveObjects++;
-                ActiveObjects.Add(prefab);
-
                 ActionOnGet(prefab);
+                
+                ActiveObjects.Add(prefab);
             },
             actionOnRelease: (prefab) =>
             {
                 CountActiveObjects--;
-                ActiveObjects.Remove(prefab);
-
                 ActionOnRelease(prefab);
+
+                ActiveObjects.Remove(prefab);
             },
             actionOnDestroy: (prefab) =>
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -10,17 +11,12 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     [Header("Настройки пула: ")]
     [SerializeField] protected int PoolSize = 5;
 
+    protected List<T> AllObjects = new();
     protected ObjectPool<T> Pool;
 
-    public int CountSpawnedObjects { get; private set; } = 0;
-    public int CountCreatedObjects { get; private set; } = 0;
     public int CountActiveObjects { get; private set; } = 0;
 
-    public event Action<int> CreatedObjectChange;
-    public event Action<int> SpawnedObjectChange;
-    public event Action<int> ActiveObjectChange;
-
-    private void Awake()
+    protected void Awake()
     {
         Pool = new ObjectPool<T>
         (
@@ -29,33 +25,28 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
                 T prefab = Instantiate(Prefab);
                 prefab.gameObject.SetActive(false);
 
-                CountCreatedObjects++;
-                CreatedObjectChange?.Invoke(CountCreatedObjects);
+                AllObjects.Add(prefab);
 
                 return prefab;
             },
             actionOnGet: (prefab) =>
             {
-                CountSpawnedObjects++;
                 CountActiveObjects++;
-                SpawnedObjectChange?.Invoke(CountSpawnedObjects);
-                ActiveObjectChange?.Invoke(CountActiveObjects);
 
                 ActionOnGet(prefab);
             },
             actionOnRelease: (prefab) =>
             {
                 CountActiveObjects--;
-                ActiveObjectChange?.Invoke(CountActiveObjects);
 
                 ActionOnRelease(prefab);
             },
             actionOnDestroy: (prefab) =>
             {
-                CountCreatedObjects--;
-                CreatedObjectChange?.Invoke(CountCreatedObjects);
-
                 Destroy(prefab);
+
+                AllObjects.Remove(prefab);
+
             },
             collectionCheck: true,
             defaultCapacity: PoolSize,
@@ -74,4 +65,11 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     }
 
     protected abstract void DestroyObject(T prefab);
+
+    public virtual void Reset()
+    {
+        foreach (T prefab in AllObjects)
+            if (prefab.gameObject.activeSelf)
+                Pool.Release(prefab);
+    }
 }

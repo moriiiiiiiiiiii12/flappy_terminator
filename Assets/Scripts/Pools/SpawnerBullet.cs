@@ -2,29 +2,36 @@ using UnityEngine;
 
 public class SpawnerBullet : Spawner<Bullet>
 {
-    [Header("Стрельба")]
-    [SerializeField] private bool _fireOnClick = true;
-
     public void Spawn(Vector3 position, Vector2 direction)
     {
-        if (CountActiveObjects >= PoolSize || Prefab == null)
-            return;
+        if (Prefab == null) return;
 
         Bullet bullet = Pool.Get();
-
+        bullet.ResetParameters();
         bullet.transform.position = position;
-        bullet.Launch(direction);
+        bullet.transform.right = direction;
 
         bullet.Finished += DestroyObject;
+        bullet.Launch(direction);
     }
 
     protected override void DestroyObject(Bullet bullet)
     {
         if (bullet == null) return;
 
-        bullet.ResetParameters();
         bullet.Finished -= DestroyObject;
 
+        if (bullet.gameObject.activeSelf == false)
+            return; 
+
+        bullet.ResetParameters();
         Pool.Release(bullet);
+    }
+
+    public override void Reset()
+    {
+        foreach (Bullet bullet in AllObjects)
+            if (bullet.gameObject.activeSelf)
+                DestroyObject(bullet);
     }
 }

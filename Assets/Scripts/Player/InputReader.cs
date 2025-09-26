@@ -9,6 +9,7 @@ public class InputReader : MonoBehaviour
     private const string Fire1 = nameof(Fire1);
 
     public float HorizontalAxis { get; private set; }
+    public bool Block = false; 
 
     public event Action AttackInput;
     public event Action PressJumpInput;
@@ -19,10 +20,13 @@ public class InputReader : MonoBehaviour
         bool attackInput = Input.GetButtonDown(Fire1);
         HorizontalAxis = Input.GetAxis(Horizontal);
 
-        if (jumpInput)
-            PressJumpInput?.Invoke();
+        if (Block == false)
+        {
+            if (jumpInput)
+                PressJumpInput?.Invoke();
 
-        if (attackInput)
-            AttackInput?.Invoke();
+            if (attackInput)
+                AttackInput?.Invoke();
+        }
     }
 }

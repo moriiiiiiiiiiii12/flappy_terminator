@@ -13,6 +13,11 @@ public class SpawnerEnemy : Spawner<Enemy>
 
     public event Action EnemyDie;
 
+    private void Start()
+    {
+        StartCoroutine(SpawnEnemies());
+    }
+
     private IEnumerator SpawnEnemies()
     {
         while (enabled)

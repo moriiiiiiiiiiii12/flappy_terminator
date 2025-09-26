@@ -25,13 +25,12 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
                 T prefab = Instantiate(Prefab);
                 prefab.gameObject.SetActive(false);
 
-                ActiveObjects.Add(prefab);
-
                 return prefab;
             },
             actionOnGet: (prefab) =>
             {
                 CountActiveObjects++;
+                ActiveObjects.Add(prefab);
 
                 ActionOnGet(prefab);
             },

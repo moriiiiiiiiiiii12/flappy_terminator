@@ -6,6 +6,9 @@ public class SpawnerBullet : Spawner<Bullet>
 {
     public void Spawn(Vector3 position, Vector2 direction)
     {
+        if (PoolSize <= CountActiveObjects)
+            return;
+
         if (Prefab == null) return;
 
         Bullet bullet = Pool.Get();

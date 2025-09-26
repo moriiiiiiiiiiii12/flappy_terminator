@@ -58,6 +58,8 @@ public class SpawnerEnemy : Spawner<Enemy>
     {
         if (enemy == null) return;
 
+        if (ActiveObjects.Contains(enemy) == false) return; 
+
         enemy.Die -= ReturnObject;
         Pool.Release(enemy);
 
@@ -86,13 +88,13 @@ public class SpawnerEnemy : Spawner<Enemy>
 
     public override void Reset()
     {
-        List<Enemy> activeEnemies = ActiveObjects.ToList();
-
-        foreach (Enemy enemy in activeEnemies)
+        foreach (Enemy enemy in ActiveObjects.ToArray())
         {
             enemy.Reset();
 
             ReturnObject(enemy);
         }
+        
+        if (ActiveObjects.Count > 0) { Reset(); }
     }
 }

@@ -30,8 +30,8 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             actionOnGet: (prefab) =>
             {
                 CountActiveObjects++;
-                ActionOnGet(prefab);
-                
+                ActionOnGet(prefab); 
+
                 ActiveObjects.Add(prefab);
             },
             actionOnRelease: (prefab) =>

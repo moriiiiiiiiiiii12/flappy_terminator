@@ -32,9 +32,9 @@ public class SpawnerBullet : Spawner<Bullet>
 
     public override void Reset()
     {
-        List<Bullet> allBullets = ActiveObjects.ToList();
+        List<Bullet> activeBullets = ActiveObjects.ToList();
         
-        foreach (Bullet bullet in allBullets)
+        foreach (Bullet bullet in activeBullets)
             ReturnObject(bullet);
     }
 }

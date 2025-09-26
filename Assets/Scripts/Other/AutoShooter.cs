@@ -28,17 +28,16 @@ class AutoShooter : MonoBehaviour
     {
         WaitForSeconds wait = new WaitForSeconds(_cooldown);
 
-        yield return wait;
-
         while (true)
         {
-            Vector2 dir = _direction.sqrMagnitude > 0.0001f
+            yield return wait;
+
+            Vector2 direction = _direction.sqrMagnitude > 0.0001f
                 ? _direction.normalized
                 : (Vector2)transform.right;
 
-            _spawnerBullet.Spawn(transform.position, dir);
+            _spawnerBullet.Spawn(transform.position, direction);
 
-            yield return wait;
         }
     }
 

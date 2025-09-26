@@ -11,7 +11,7 @@ public class CollisionHandler : MonoBehaviour
     {
         int collisionLayerMask = 1 << other.gameObject.layer;
 
-        if (other.TryGetComponent(out IInteractable interactable) && collisionLayerMask == _targetLayer.value)
+        if (collisionLayerMask == _targetLayer.value && other.TryGetComponent(out IInteractable interactable))
         {
             CollisionDetected?.Invoke(interactable);
         }

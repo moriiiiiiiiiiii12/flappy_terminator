@@ -11,7 +11,7 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
     [Header("Настройки пула: ")]
     [SerializeField] protected int PoolSize = 5;
 
-    protected List<T> AllObjects = new();
+    protected List<T> ActiveObjects = new();
     protected ObjectPool<T> Pool;
 
     public int CountActiveObjects { get; private set; } = 0;
@@ -25,7 +25,7 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
                 T prefab = Instantiate(Prefab);
                 prefab.gameObject.SetActive(false);
 
-                AllObjects.Add(prefab);
+                ActiveObjects.Add(prefab);
 
                 return prefab;
             },
@@ -38,15 +38,13 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
             actionOnRelease: (prefab) =>
             {
                 CountActiveObjects--;
+                ActiveObjects.Remove(prefab);
 
                 ActionOnRelease(prefab);
             },
             actionOnDestroy: (prefab) =>
             {
-                Destroy(prefab);
-
-                AllObjects.Remove(prefab);
-
+                Destroy(prefab.gameObject);
             },
             collectionCheck: true,
             defaultCapacity: PoolSize,
@@ -64,12 +62,9 @@ public abstract class Spawner<T> : MonoBehaviour where T : MonoBehaviour
         prefab.gameObject.SetActive(false);
     }
 
-    protected abstract void DestroyObject(T prefab);
-
     public virtual void Reset()
     {
-        foreach (T prefab in AllObjects)
-            if (prefab.gameObject.activeSelf)
-                Pool.Release(prefab);
+        foreach (T prefab in ActiveObjects)
+            Pool.Release(prefab);
     }
 }

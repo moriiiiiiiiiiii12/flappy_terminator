@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class ScrollerRawImage : MonoBehaviour 
 {
     [SerializeField] private RawImage _img;
-    [SerializeField] private float _x, _y;
+    [SerializeField] private float _x;
+    [SerializeField] private float _y;
 
     private void Update()
     {

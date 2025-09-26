@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class SpawnerEnemy : Spawner<Enemy>
 {
@@ -37,6 +39,7 @@ public class SpawnerEnemy : Spawner<Enemy>
         {
             float x = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
             float y = UnityEngine.Random.Range(bounds.min.y, bounds.max.y);
+            
             SpawnAt(new Vector3(x, y, 0f));
         }
     }
@@ -48,14 +51,14 @@ public class SpawnerEnemy : Spawner<Enemy>
         Enemy enemy = Pool.Get();
         enemy.transform.position = position;
 
-        enemy.Die += DestroyObject;
+        enemy.Die += ReturnObject;
     }
 
-    protected override void DestroyObject(Enemy enemy)
+    protected void ReturnObject(Enemy enemy)
     {
         if (enemy == null) return;
 
-        enemy.Die -= DestroyObject;
+        enemy.Die -= ReturnObject;
         Pool.Release(enemy);
 
         EnemyDie?.Invoke();
@@ -69,6 +72,7 @@ public class SpawnerEnemy : Spawner<Enemy>
 
             return true;
         }
+        
         if (_arenaRenderer != null)
         {
             bounds = _arenaRenderer.bounds;
@@ -82,14 +86,13 @@ public class SpawnerEnemy : Spawner<Enemy>
 
     public override void Reset()
     {
-        foreach (Enemy enemy in AllObjects)
+        List<Enemy> activeEnemies = ActiveObjects.ToList();
+
+        foreach (Enemy enemy in activeEnemies)
         {
             enemy.Reset();
 
-            if (enemy.gameObject.activeSelf)
-            {
-                DestroyObject(enemy);
-            }
+            ReturnObject(enemy);
         }
     }
 }

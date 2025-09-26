@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnerBullet : Spawner<Bullet>
@@ -11,15 +13,15 @@ public class SpawnerBullet : Spawner<Bullet>
         bullet.transform.position = position;
         bullet.transform.right = direction;
 
-        bullet.Finished += DestroyObject;
+        bullet.Finished += ReturnObject;
         bullet.Launch(direction);
     }
 
-    protected override void DestroyObject(Bullet bullet)
+    private void ReturnObject(Bullet bullet)
     {
         if (bullet == null) return;
 
-        bullet.Finished -= DestroyObject;
+        bullet.Finished -= ReturnObject;
 
         if (bullet.gameObject.activeSelf == false)
             return; 
@@ -30,8 +32,9 @@ public class SpawnerBullet : Spawner<Bullet>
 
     public override void Reset()
     {
-        foreach (Bullet bullet in AllObjects)
-            if (bullet.gameObject.activeSelf)
-                DestroyObject(bullet);
+        List<Bullet> allBullets = ActiveObjects.ToList();
+        
+        foreach (Bullet bullet in allBullets)
+            ReturnObject(bullet);
     }
 }

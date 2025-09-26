@@ -28,20 +28,7 @@ public class Player : MonoBehaviour
 
     private void ProcessCollision(IInteractable interactable)
     {
-        if (interactable is Enemy)
-        {
-            GameOver?.Invoke();
-        }
-
-        if (interactable is Bullet)
-        {
-            GameOver?.Invoke();
-        }
-
-        if (interactable is DeadZone)
-        {
-            GameOver?.Invoke();
-        }
+        GameOver?.Invoke();
     }
 
     public void ExecuteAttack()

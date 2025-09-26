@@ -21,15 +21,10 @@ public class Enemy : MonoBehaviour, IInteractable
 
     private void ProcessCollision(IInteractable interactable)
     {
-        if (interactable is DeadZone)
-        {
-            Die?.Invoke(this);
-        } 
-
-        if (interactable is Bullet)
-        {
-            Die?.Invoke(this);
-        }
+        if (interactable is Player)
+            return;
+            
+        Die?.Invoke(this);
     }
 
     public void Reset()

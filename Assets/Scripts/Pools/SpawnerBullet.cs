@@ -9,7 +9,8 @@ public class SpawnerBullet : Spawner<Bullet>
         if (PoolSize <= CountActiveObjects)
             return;
 
-        if (Prefab == null) return;
+        if (Prefab == null)
+            return;
 
         Bullet bullet = Pool.Get();
 
@@ -23,9 +24,11 @@ public class SpawnerBullet : Spawner<Bullet>
  
     private void ReturnObject(Bullet bullet)
     {
-        if (bullet == null) return;
+        if (bullet == null)
+            return;
 
-        if (ActiveObjects.Contains(bullet) == false) return; 
+        if (ActiveObjects.Contains(bullet) == false)
+            return; 
 
         Pool.Release(bullet);
         
@@ -39,6 +42,7 @@ public class SpawnerBullet : Spawner<Bullet>
         foreach (Bullet bullet in ActiveObjects.ToArray())
             ReturnObject(bullet);
             
-        if (ActiveObjects.Count > 0) { Reset(); }
+        if (ActiveObjects.Count > 0)
+            Reset(); 
     }
 }

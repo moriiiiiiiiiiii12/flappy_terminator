@@ -46,7 +46,8 @@ public class SpawnerEnemy : Spawner<Enemy>
 
     public void SpawnAt(Vector3 position)
     {
-        if (Prefab == null) return;
+        if (Prefab == null)
+            return;
 
         Enemy enemy = Pool.Get();
         enemy.transform.position = position;
@@ -56,9 +57,11 @@ public class SpawnerEnemy : Spawner<Enemy>
 
     protected void ReturnObject(Enemy enemy)
     {
-        if (enemy == null) return;
+        if (enemy == null)
+            return;
 
-        if (ActiveObjects.Contains(enemy) == false) return; 
+        if (ActiveObjects.Contains(enemy) == false)
+            return; 
 
         enemy.Die -= ReturnObject;
         Pool.Release(enemy);
@@ -95,6 +98,7 @@ public class SpawnerEnemy : Spawner<Enemy>
             ReturnObject(enemy);
         }
         
-        if (ActiveObjects.Count > 0) { Reset(); }
+        if (ActiveObjects.Count > 0)
+            Reset();
     }
 }
